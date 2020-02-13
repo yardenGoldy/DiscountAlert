@@ -1,11 +1,9 @@
-﻿using System;
-using System.Drawing;
-using System.Drawing.Imaging;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
 using DiscountAlert.ExceptionHandler;
 using DiscountAlert.RetryMechanism;
 using DiscountAlert.WebDriver;
+using SixLabors.ImageSharp;
 
 namespace DiscountAlert.Core
 {
@@ -24,15 +22,20 @@ namespace DiscountAlert.Core
             // const string title = "ksp one plus";
 
             
-            const string url = "https://www.ivory.co.il/catalog.php?act=cat&id=2735&f=4563&fromPrice=2422&toPrice=2661";
-            const string classElement = "category-list";
-            const string title = "ivory one plus";
+            // const string url = "https://www.ivory.co.il/catalog.php?act=cat&id=2735&f=4563&fromPrice=2422&toPrice=2661";
+            // const string classElement = "category-list";
+            // const string title = "ivory one plus";
+
+            const string url = "https://www.trivago.co.il/?aDateRange%5Barr%5D=2020-04-08&aDateRange%5Bdep%5D=2020-04-13&aPriceRange%5Bfrom%5D=0&aPriceRange%5Bto%5D=11301&iRoomType=7&aRooms%5B0%5D%5Badults%5D=2&cpt2=25084%2F200&iViewType=0&bIsSeoPage=0&sortingId=1&slideoutsPageItemId=&iGeoDistanceLimit=20000&address=&addressGeoCode=&offset=0&ra=";
+            const string classElement = "item__wrapper";
+            const string title = "trivago roma";
+            
 
             
             var results = watcher.Watch(title, url, classElement);
-            using(Image image = Image.FromStream(new MemoryStream(results.First().Snapshot.ToArray())))
+            using(Image image = Image.Load(new MemoryStream(results.First().Snapshot.ToArray())))
             {
-                image.Save(("C\\Snapshot\\" + title) , ImageFormat.Png);  // Or Png
+                image.Save((".\\Snapshot\\" + title + ".png"));
             }
 
         }

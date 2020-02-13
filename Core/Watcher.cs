@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading;
 using DiscountAlert.Shared;
+using OpenQA.Selenium;
 
 namespace DiscountAlert.Core
 {
@@ -12,8 +14,14 @@ namespace DiscountAlert.Core
             "price",
             "$",
             "₪",
-            "מחיר"
+            "מחיר",
+            "שח",
+            @"ש""ח",
+            "usd",
+            "שקל",
+            "שקלים",
         };
+        //*[matches(text(),'(^|\W)match($|\W)','i')]
         private IGEWebDriver _webDriver;
         public Watcher(IGEWebDriver webDriver){
             _webDriver = webDriver;
@@ -21,13 +29,13 @@ namespace DiscountAlert.Core
 
         public List<WatcherWebDriver> Watch(string title, string url, string classNameOfResults){
             this._webDriver.Navigate(url);
-            return this.FindPriceElements(classNameOfResults);
+            return this.FindElementForWatch(classNameOfResults);
         }
 
-        private List<WatcherWebDriver> FindPriceElements(string classNameOfResults){
+        private List<WatcherWebDriver> FindElementForWatch(string classNameOfResults){
             List<WatcherWebDriver> watcherWebDrivers = new List<WatcherWebDriver>();
-            Thread.Sleep(10000);
-            var elementsToWatch = _webDriver.FindElementsByClassName(classNameOfResults);
+            Thread.Sleep(6000);
+            var elementsToWatch = _webDriver._driver.FindElements(By.ClassName(classNameOfResults));
             for(int i = 0; i < elementsToWatch.Count; i++){
                 var elem = elementsToWatch[i];
                 watcherWebDrivers.Add(new WatcherWebDriver(){
@@ -42,39 +50,37 @@ namespace DiscountAlert.Core
 
         }
 
-        private double FindPrice(IGEWebElement element){
+        private double FindPrice(IWebElement element){
             for(int i = 0; i < identifiers.Count; i++) {
                 string priceIdentify = identifiers[i];
-                var priceElementCandidates = element.FindElementsByContainsText(priceIdentify);
-                double price;
-                if(this.TryGetMaxPriceOfAnElement(priceElementCandidates, out price)){
-                    return price;
+                var xPath = $".//*[contains(text(), '{identifiers[i]}')]//parent::*";
+                var priceElementCandidates = element.FindElements(By.XPath(xPath));
+                var filteredPriceElement = priceElementCandidates.Where(x => x.Text != "" && x.Text.Split(identifiers[2]).Length ==2).ToList();
+                var price = this.TryGetMaxPriceOfAnElement(filteredPriceElement);
+                if(price.HasValue){
+                    return price.Value;
                 }
             }
 
-            throw new Exception("cannot find price in the element");
+            throw new Exception("can not find any price");
         }
 
-        private bool TryGetMaxPriceOfAnElement(IList<IGEWebElement> elements, out double price)
+        private double? TryGetMaxPriceOfAnElement(IList<IWebElement> elements)
         {
+            double? resultPrice = null;
             List<double> prices = new List<double>();
             for(int j = 0; j < elements.Count; j++) {
                     string priceText = elements[j].Text;
-                    string regex = @"\x" + String.Join("|", identifiers) + @"\g";
                     double result;
-                    if(double.TryParse(priceText.Replace(regex, ""), out result))
+                    var elementPrice = Regex.Replace(priceText, "[^0-9.]", "");
+                    if(double.TryParse(elementPrice, out result))
                         prices.Add(result);
             }
-            bool hasPrice = false;
             if(prices.Count != 0){
-                hasPrice = true;
-                price = prices.Max();
+                resultPrice = prices.Max();
             }
-            else
-            {
-                price = 0;
-            }
-            return hasPrice;
+
+            return resultPrice;
         }
     }
 }

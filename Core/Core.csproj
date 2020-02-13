@@ -10,6 +10,9 @@
     <ProjectReference Include="..\ExceptionHandler\ExceptionHandler.csproj"/>
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Selenium.Support" Version="3.141.0"/>
+    <PackageReference Include="Selenium.WebDriver" Version="3.141.0"/>
     <PackageReference Include="ImageProcessor" Version="2.8.0"/>
+    <PackageReference Include="SixLabors.ImageSharp" Version="1.0.0-beta0007"/>
   </ItemGroup>
 </Project>

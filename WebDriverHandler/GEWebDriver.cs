@@ -12,7 +12,7 @@ namespace DiscountAlert.WebDriver
 {
     public class GEWebDriver : IGEWebDriver
     {
-        private IWebDriver _driver;
+        public IWebDriver _driver { get; set; }
 
         private IGEWebElement _rootElement;
 
@@ -97,13 +97,18 @@ namespace DiscountAlert.WebDriver
             return CalculateState(_driver);
         }
 
-        public IList<byte> TakeScreenShot(IGEWebElement element = null) {
+        public IList<byte> TakeScreenShot(IWebElement element = null) {
             Screenshot screenshot = null;
             if(element == null)
+            {
                 screenshot = ((ITakesScreenshot)_driver).GetScreenshot();
+            }
             else
+            {
+                ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].scrollIntoView(true);", element); 
                 screenshot = ((ITakesScreenshot)element).GetScreenshot();
-            
+            }
+                
             return screenshot.AsByteArray.ToList();
         }
 
