@@ -15,8 +15,12 @@ namespace DiscountAlert.Shared
         ReadOnlyCollection<IGEWebElement> FindElements(string tag, string attribute, string value);
         ReadOnlyCollection<IGEWebElement> FindElements(string attribute, string value);
         ReadOnlyCollection<IGEWebElement> FindElementsByClassName(string className);
+        ReadOnlyCollection<IGEWebElement> FindChildElementsByTagName(string tag);
         ReadOnlyCollection<IGEWebElement> FindElementsByTag(string tag);
         ReadOnlyCollection<IGEWebElement> FindElementsByText(string text);
         ReadOnlyCollection<IGEWebElement> FindElementsByContainsText(string containText);
+        bool IsElementExist(string tag, string attribute, string value);
+        bool IsElementExist(string attribute, string value);
+        bool IsElementExistByContainText(string containText);
     }
 }
