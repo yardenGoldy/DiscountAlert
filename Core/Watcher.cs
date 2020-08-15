@@ -35,7 +35,8 @@ namespace DiscountAlert.Core
         private List<WatcherWebDriver> FindElementForWatch(string classNameOfResults){
             List<WatcherWebDriver> watcherWebDrivers = new List<WatcherWebDriver>();
             Thread.Sleep(6000);
-            var elementsToWatch = _webDriver._driver.FindElements(By.ClassName(classNameOfResults));
+            
+            var elementsToWatch = _webDriver.FindElementsByClassName(classNameOfResults);
             for(int i = 0; i < elementsToWatch.Count; i++){
                 var elem = elementsToWatch[i];
                 watcherWebDrivers.Add(new WatcherWebDriver(){
@@ -50,11 +51,10 @@ namespace DiscountAlert.Core
 
         }
 
-        private double FindPrice(IWebElement element){
+        private double FindPrice(IGEWebElement element){
             for(int i = 0; i < identifiers.Count; i++) {
                 string priceIdentify = identifiers[i];
-                var xPath = $".//*[contains(text(), '{identifiers[i]}')]//parent::*";
-                var priceElementCandidates = element.FindElements(By.XPath(xPath));
+                var priceElementCandidates = element.FindElementsByContainsText(identifiers[i]);
                 var filteredPriceElement = priceElementCandidates.Where(x => x.Text != "" && x.Text.Split(identifiers[2]).Length ==2).ToList();
                 var price = this.TryGetMaxPriceOfAnElement(filteredPriceElement);
                 if(price.HasValue){
@@ -65,7 +65,7 @@ namespace DiscountAlert.Core
             throw new Exception("can not find any price");
         }
 
-        private double? TryGetMaxPriceOfAnElement(IList<IWebElement> elements)
+        private double? TryGetMaxPriceOfAnElement(IList<IGEWebElement> elements)
         {
             double? resultPrice = null;
             List<double> prices = new List<double>();
