@@ -137,8 +137,8 @@ namespace DiscountAlert.WebDriver
             }
             else
             {
-                ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].scrollIntoView(true);", element);
-                screenshot = ((ITakesScreenshot)element).GetScreenshot();
+                ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].scrollIntoView(true);", element.SourceElement);
+                screenshot = ((ITakesScreenshot)element.SourceElement).GetScreenshot();
             }
 
             return screenshot.AsByteArray.ToList();

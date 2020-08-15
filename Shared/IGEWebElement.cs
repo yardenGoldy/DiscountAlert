@@ -5,10 +5,10 @@ namespace DiscountAlert.Shared
         IGEWebElement Parent { get; }
         string Text { get; }
         string TagName { get; }
-
         void SetValueLikeHuman(string value);
 
         string GetAttribute(string attribute);
         void Click();
+        object SourceElement { get;}
     }
 }

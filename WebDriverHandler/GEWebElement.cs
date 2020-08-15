@@ -8,6 +8,7 @@ namespace DiscountAlert.WebDriver
     {
         private IWebElement _relativeRootElement;
 
+        public object SourceElement { get { return _relativeRootElement;}}
         public GEWebElement(IWebElement element, IGERetryMechanism retryMechanism)
         : base(retryMechanism)
         {
