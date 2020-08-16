@@ -13,9 +13,9 @@ namespace DiscountAlert.Core
         {
             GEWebDriver driver = new GEWebDriver(new GERetryMechanism(new GEExceptionHandler()));
             Watcher watcher = new Watcher(driver);
-            const string url = "https://www.skyscanner.co.il/transport/flights/tlv/bud/200820/200827/?adults=1&adultsv2=1&cabinclass=economy&children=0&childrenv2=&inboundaltsenabled=false&infants=0&outboundaltsenabled=false&preferdirects=false&preferflexible=false&ref=home&rtn=1";
-            const string classElement = "EcoTicketWrapper_itineraryContainer__1VGlu";
-            const string title = "flight to budapest";
+            // const string url = "https://www.skyscanner.co.il/transport/flights/tlv/bud/200820/200827/?adults=1&adultsv2=1&cabinclass=economy&children=0&childrenv2=&inboundaltsenabled=false&infants=0&outboundaltsenabled=false&preferdirects=false&preferflexible=false&ref=home&rtn=1";
+            // const string classElement = "EcoTicketWrapper_itineraryContainer__1VGlu";
+            // const string title = "flight to budapest";
 
             // const string url = "https://ksp.co.il/?select=.272..573..2190..11451.&kg=&list=1&sort=2&glist=0&uin=0&txt_search=&buy=&minprice=0&maxprice=0&intersect=&rintersect=&store_real=";
             // const string classElement = "lineshowbox";
@@ -30,9 +30,9 @@ namespace DiscountAlert.Core
             //const string classElement = "item__wrapper";
             //const string title = "trivago roma";
 
-            // const string url = "https://www.asics.com/us/en-us/search/?q=ASICS%20ff%20novak&prefn1=size&prefv1=11";
-            // const string classElement = "product-tile";
-            // const string title = "asics";
+            const string url = "https://www.asics.com/us/en-us/search/?q=ASICS%20ff%20novak&prefn1=size&prefv1=11";
+            const string classElement = "product-tile";
+            const string title = "asics";
 
             
             var results = watcher.Watch(title, url, classElement);
