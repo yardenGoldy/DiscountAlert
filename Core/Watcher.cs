@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
 using DiscountAlert.Shared;
 using OpenQA.Selenium;
+using SixLabors.ImageSharp;
 
 namespace DiscountAlert.Core
 {
@@ -93,6 +95,13 @@ namespace DiscountAlert.Core
             }
 
             return resultPrice;
+        }
+        private void ShowElement(IGEWebElement elem){
+            var screenShot = this._webDriver.TakeScreenShot(elem);
+            using(Image image = Image.Load(new MemoryStream(screenShot.ToArray())))
+            {
+                image.Save((".\\Snapshot\\" + "title" + ".png"));
+            }
         }
 
         private double choosePrice(IList<double> prices){
