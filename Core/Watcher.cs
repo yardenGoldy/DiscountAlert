@@ -72,22 +72,20 @@ namespace DiscountAlert.Core
             double? resultPrice = null;
             List<double> prices = new List<double>();
             for(int j = 0; j < elements.Count; j++) {
-                    string priceText = elements[j].Text;
-                    double result;
-                    var elementPrice = Regex.Replace(priceText, "[^0-9.]", "");
-                    if(double.TryParse(elementPrice, out result))
-                    {
-                       prices.Add(result);
-                    }
-                        else {
-                    string parentPriceText = elements[j].Parent.Text;
-                    double parentResult;
-                    var parentElementPrice = Regex.Replace(parentPriceText, "[^0-9.]", "");
-                    if(double.TryParse(elementPrice, out parentResult))
-                    {
-                       prices.Add(parentResult);
-                    }
+                string priceText = elements[j].Text;
+                double result;
+                    
+                if(this.TryGetPrice(out result, priceText))
+                {
+                   prices.Add(result);
                 }
+                else {
+                    string parentPriceText = elements[j].Parent.Text;
+                    if(this.TryGetPrice(out result , parentPriceText))
+                    {
+                        prices.Add(result);
+                    }
+                }   
             }
             
             if(prices.Count != 0){
@@ -95,6 +93,11 @@ namespace DiscountAlert.Core
             }
 
             return resultPrice;
+        }
+
+        private bool TryGetPrice(out double result, string priceText){
+            var elementPrice = Regex.Replace(priceText, "[^0-9.]", "");
+                    return double.TryParse(elementPrice, out result);
         }
         private void ShowElement(IGEWebElement elem){
             var screenShot = this._webDriver.TakeScreenShot(elem);
