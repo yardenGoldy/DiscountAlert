@@ -76,7 +76,7 @@ namespace DiscountAlert.WebDriver
 
         public ReadOnlyCollection<IGEWebElement> FindElements(string attribute, string value)
         {
-            var attributeValuePattern = $".//*[@{attribute}='{value}']";
+            var attributeValuePattern = $".//*[contains(concat(' ', @{attribute}, ' '),' {value} ')]";
             return FindElementsByXPath(attributeValuePattern);
         }
 
