@@ -56,7 +56,7 @@ namespace DiscountAlert.Core
                 string priceIdentify = identifiers[i];
                 var priceElementCandidates = element.FindElementsByContainsText(identifiers[i]);
                 var filteredPriceElement = priceElementCandidates.Where(x => x.Text != "").ToList();
-                var price = this.TryGetMaxPriceOfAnElement(filteredPriceElement);
+                var price = this.TryGetMinPriceOfAnElement(filteredPriceElement);
                 if(price.HasValue){
                     return price.Value;
                 }
@@ -65,7 +65,7 @@ namespace DiscountAlert.Core
             throw new Exception("can not find any price");
         }
 
-        private double? TryGetMaxPriceOfAnElement(IList<IGEWebElement> elements)
+        private double? TryGetMinPriceOfAnElement(IList<IGEWebElement> elements)
         {
             double? resultPrice = null;
             List<double> prices = new List<double>();
