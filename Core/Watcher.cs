@@ -74,8 +74,20 @@ namespace DiscountAlert.Core
                     double result;
                     var elementPrice = Regex.Replace(priceText, "[^0-9.]", "");
                     if(double.TryParse(elementPrice, out result))
-                        prices.Add(result);
+                    {
+                       prices.Add(result);
+                    }
+                        else {
+                    string parentPriceText = elements[j].Parent.Text;
+                    double parentResult;
+                    var parentElementPrice = Regex.Replace(parentPriceText, "[^0-9.]", "");
+                    if(double.TryParse(elementPrice, out parentResult))
+                    {
+                       prices.Add(parentResult);
+                    }
+                }
             }
+            
             if(prices.Count != 0){
                 resultPrice = choosePrice(prices);
             }
