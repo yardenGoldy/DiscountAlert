@@ -55,7 +55,7 @@ namespace DiscountAlert.Core
             for(int i = 0; i < identifiers.Count; i++) {
                 string priceIdentify = identifiers[i];
                 var priceElementCandidates = element.FindElementsByContainsText(identifiers[i]);
-                var filteredPriceElement = priceElementCandidates.Where(x => x.Text != "" && x.Text.Split(identifiers[2]).Length ==2).ToList();
+                var filteredPriceElement = priceElementCandidates.Where(x => x.Text != "").ToList();
                 var price = this.TryGetMaxPriceOfAnElement(filteredPriceElement);
                 if(price.HasValue){
                     return price.Value;
@@ -77,10 +77,32 @@ namespace DiscountAlert.Core
                         prices.Add(result);
             }
             if(prices.Count != 0){
-                resultPrice = prices.Max();
+                resultPrice = choosePrice(prices);
             }
 
             return resultPrice;
+        }
+
+        private double choosePrice(IList<double> prices){
+            double median = this.getMedian(prices);
+            prices = prices.Where(price => median * 0.2 < price).ToList();
+            return prices.Min();
+        }
+
+        private double getMedian(IList<double> numbers){
+            int numberCount = numbers.Count();
+            int halfIndex = numbers.Count()/2;
+            var sortedNumbers = numbers.OrderBy(n=>n);
+            double median;
+            if ((numberCount % 2) == 0)
+            {
+                median = ((sortedNumbers.ElementAt(halfIndex) +
+                sortedNumbers.ElementAt((halfIndex - 1)))/ 2);
+            } else {
+                median = sortedNumbers.ElementAt(halfIndex);
+            }
+
+            return median;
         }
     }
 }
