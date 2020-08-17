@@ -5,6 +5,7 @@
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\Shared\Shared.csproj"/>
+    <ProjectReference Include="..\Boot\Boot.csproj"/>
     <ProjectReference Include="..\WebDriverHandler\WebDriverHandler.csproj"/>
     <ProjectReference Include="..\RetryMechanism\RetryMechanism.csproj"/>
     <ProjectReference Include="..\ExceptionHandler\ExceptionHandler.csproj"/>
