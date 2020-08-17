@@ -22,9 +22,9 @@ namespace DiscountAlert.Core
             // const string title = "ksp one plus";
 
             
-            // const string url = "https://www.ivory.co.il/catalog.php?act=cat&id=2735&f=4563&fromPrice=3303";
-            // const string classElement = "category-list";
-            // const string title = "ivory one plus";
+            const string url = "https://www.ivory.co.il/catalog.php?act=cat&id=2735&f=4563&fromPrice=3303";
+            const string classElement = "category-list";
+            const string title = "ivory one plus";
 
             //const string url = "https://www.trivago.co.il/?aDateRange%5Barr%5D=2020-04-08&aDateRange%5Bdep%5D=2020-04-13&aPriceRange%5Bfrom%5D=0&aPriceRange%5Bto%5D=11301&iRoomType=7&aRooms%5B0%5D%5Badults%5D=2&cpt2=25084%2F200&iViewType=0&bIsSeoPage=0&sortingId=1&slideoutsPageItemId=&iGeoDistanceLimit=20000&address=&addressGeoCode=&offset=0&ra=";
             //const string classElement = "item__wrapper";
@@ -38,9 +38,13 @@ namespace DiscountAlert.Core
             // const string classElement = "sr_item  sr_item_new sr_item_default sr_property_block   sr_flex_layout";
             // const string title = "booking";
 
-            const string url = "https://www.gomobile.co.il/25135-%D7%9E%D7%9B%D7%A9%D7%99%D7%A8%D7%99%D7%9D-%D7%A0%D7%99%D7%99%D7%93%D7%99%D7%9D/2200,2800,top?q=one%20plus";
-            const string classElement = "layout_list_item css_class_25135  col-xs-12 col-sm-6 col-md-4 col-lg-3";
-            const string title = "go mobile";
+            // const string url = "https://www.gomobile.co.il/25135-%D7%9E%D7%9B%D7%A9%D7%99%D7%A8%D7%99%D7%9D-%D7%A0%D7%99%D7%99%D7%93%D7%99%D7%9D/2200,2800,top?q=one%20plus";
+            // const string classElement = "layout_list_item css_class_25135  col-xs-12 col-sm-6 col-md-4 col-lg-3";
+            // const string title = "go mobile";
+
+            // const string url = "https://www.aliexpress.com/item/10000000795100.html?spm=a2g0o.productlist.0.0.a45f13aaFRhUZt&algo_pvid=2b57e825-a6b6-4744-a093-a0c752b32f09&algo_expid=2b57e825-a6b6-4744-a093-a0c752b32f09-2&btsid=0ab6f81615976629977315422e6687&ws_ab_test=searchweb0_0,searchweb201602_,searchweb201603_";
+            // const string classElement = "product-info";
+            // const string title = "aliexpress";   
 
             // const string url = "https://www.momondo.com/flight-search/TLV-BUD/2020-09-15/2020-09-22?sort=bestflight_a";
             // const string classElement = "Base-Results-HorizonResult";

@@ -98,8 +98,18 @@ namespace DiscountAlert.Core
         }
 
         private bool TryGetPrice(out double result, string priceText){
-            var elementPrice = Regex.Replace(priceText, "[^0-9.]", "");
-                    return double.TryParse(elementPrice, out result);
+            result = 0;
+            var elementPrice = Regex.Replace(priceText, "[^0-9.-]", "");
+            var rangePrices = elementPrice.Split("-");
+            if(rangePrices.Count() ==2)
+            {
+                double firstNumber, secondNumber = default(double);
+                bool isPrices = double.TryParse(rangePrices[0], out firstNumber) && 
+                                double.TryParse(rangePrices[1], out secondNumber);
+                if(isPrices)    result = Math.Max(firstNumber, secondNumber);
+                return isPrices;
+            }
+            return double.TryParse(elementPrice, out result);
         }
         private void ShowElement(IGEWebElement elem){
             var screenShot = this._webDriver.TakeScreenShot(elem);
