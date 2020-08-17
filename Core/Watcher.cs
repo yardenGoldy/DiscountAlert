@@ -56,7 +56,9 @@ namespace DiscountAlert.Core
         private double FindPrice(IGEWebElement element){
             for(int i = 0; i < identifiers.Count; i++) {
                 string priceIdentify = identifiers[i];
-                var priceElementCandidates = element.FindElementsByContainsText(identifiers[i]);
+                var priceElementCandidates = element.FindElementsByContainsText(priceIdentify);
+                if(priceElementCandidates.Count == 0)
+                    priceElementCandidates = element.FindElementsByContainsTextIgnoreSpaces(priceIdentify);
                 var filteredPriceElement = priceElementCandidates.Where(x => x.Text != "").ToList();
                 var price = this.TryGetMinPriceOfAnElement(filteredPriceElement);
                 if(price.HasValue){

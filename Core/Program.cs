@@ -34,6 +34,9 @@ namespace DiscountAlert.Core
             const string classElement = "product-tile";
             const string title = "asics";
 
+            // const string url = "https://www.momondo.com/flight-search/TLV-BUD/2020-09-15/2020-09-22?sort=bestflight_a";
+            // const string classElement = "Base-Results-HorizonResult";
+            // const string title = "momndo";
             
             var results = watcher.Watch(title, url, classElement);
             using(Image image = Image.Load(new MemoryStream(results.First().Snapshot.ToArray())))

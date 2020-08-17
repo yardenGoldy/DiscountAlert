@@ -96,6 +96,12 @@ namespace DiscountAlert.WebDriver
             return FindElementsByXPath(containTextPattern);
         }
 
+        public ReadOnlyCollection<IGEWebElement> FindElementsByContainsTextIgnoreSpaces(string containText)
+        {
+            var containTextPattern = $".//*[contains(normalize-space(), '{containText}')]";
+            return FindElementsByXPath(containTextPattern);
+        }
+
         public ReadOnlyCollection<IGEWebElement> FindElementsByText(string text)
         {
             var findByTextPattern = $".//*[text()='{text}']";
