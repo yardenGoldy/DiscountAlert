@@ -2,7 +2,7 @@
 using Telegram.Bot.Args;
 using Telegram.Bot;  
 
-namespace Boot
+namespace DiscountAlert.Boot
 {
     public class Boot
     {
