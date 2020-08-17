@@ -1,12 +1,12 @@
 ﻿using System;
 using Telegram.Bot.Args;
-using Telegram.Bot;  
+using Telegram.Bot;
 
 namespace DiscountAlert.Boot
 {
     public class Boot
     {
-        private static readonly TelegramBotClient bot = new TelegramBotClient("1222193869:AAH4QQJuC2IUJ-0HRxCnBQ98URRNGreBFLIs");
+        private static readonly TelegramBotClient bot = new TelegramBotClient("1222193869:AAH4QQJuC2IUJ-0HRxCnBQ98URRNGreBFLI");
 
         public Boot()
         {
