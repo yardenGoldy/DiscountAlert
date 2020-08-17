@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
 using DiscountAlert.Shared;
+using MoreLinq;
 using OpenQA.Selenium;
 using SixLabors.ImageSharp;
 
@@ -13,13 +14,15 @@ namespace DiscountAlert.Core
     public class Watcher
     {
         private readonly List<string> identifiers = new List<string>(){
-            "price",
             "$",
             "₪",
+            "price",
             "מחיר",
             "שח",
-            @"ש""ח",
             "usd",
+            "dollars",
+            "us",
+            "ils",
             "שקל",
             "שקלים",
         };
@@ -57,10 +60,8 @@ namespace DiscountAlert.Core
             for(int i = 0; i < identifiers.Count; i++) {
                 string priceIdentify = identifiers[i];
                 var priceElementCandidates = element.FindElementsByContainsText(priceIdentify);
-                if(priceElementCandidates.Count == 0)
-                    priceElementCandidates = element.FindElementsByContainsTextIgnoreSpaces(priceIdentify);
-                var filteredPriceElement = priceElementCandidates.Where(x => x.Text != "").ToList();
-                var price = this.TryGetMinPriceOfAnElement(filteredPriceElement);
+                var filteredPriceElement = priceElementCandidates.Where(x => x.Text != "").DistinctBy(x => x.Text).ToList();
+                var price = this.TryGetMinPriceOfAnElement(filteredPriceElement, priceIdentify);
                 if(price.HasValue){
                     return price.Value;
                 }
@@ -69,12 +70,13 @@ namespace DiscountAlert.Core
             throw new Exception("can not find any price");
         }
 
-        private double? TryGetMinPriceOfAnElement(IList<IGEWebElement> elements)
+        private double? TryGetMinPriceOfAnElement(IList<IGEWebElement> elements, string priceIdentify)
         {
             double? resultPrice = null;
             List<double> prices = new List<double>();
             for(int j = 0; j < elements.Count; j++) {
                 string priceText = elements[j].Text;
+                priceText = this.getPriceFromText(priceText, priceIdentify);
                 double result;
                     
                 if(this.TryGetPrice(out result, priceText))
@@ -83,6 +85,7 @@ namespace DiscountAlert.Core
                 }
                 else {
                     string parentPriceText = elements[j].Parent.Text;
+                    parentPriceText = this.getPriceFromText(parentPriceText, priceIdentify);
                     if(this.TryGetPrice(out result , parentPriceText))
                     {
                         prices.Add(result);
@@ -96,19 +99,25 @@ namespace DiscountAlert.Core
 
             return resultPrice;
         }
+        private string getPriceFromText(string priceText, string priceIdentify){
+            if(priceIdentify.Count() == 1) priceIdentify = "\\" + priceIdentify;
+                var regex = new Regex($"({priceIdentify}\\s*[0-9,]+(\\.[0-9]{{2}})?)|([0-9,]+(\\.[0-9]{{2}})?\\s*{priceIdentify})");
+                var check = regex.Match(priceText);
+                return check.Value;
+        }
 
         private bool TryGetPrice(out double result, string priceText){
             result = 0;
             var elementPrice = Regex.Replace(priceText, "[^0-9.-]", "");
-            var rangePrices = elementPrice.Split("-");
-            if(rangePrices.Count() ==2)
-            {
-                double firstNumber, secondNumber = default(double);
-                bool isPrices = double.TryParse(rangePrices[0], out firstNumber) && 
-                                double.TryParse(rangePrices[1], out secondNumber);
-                if(isPrices)    result = Math.Max(firstNumber, secondNumber);
-                return isPrices;
-            }
+            // var rangePrices = elementPrice.Split("-");
+            // if(rangePrices.Count() ==2)
+            // {
+            //     double firstNumber, secondNumber = default(double);
+            //     bool isPrices = double.TryParse(rangePrices[0], out firstNumber) && 
+            //                     double.TryParse(rangePrices[1], out secondNumber);
+            //     if(isPrices)    result = Math.Max(firstNumber, secondNumber);
+            //     return isPrices;
+            // }
             return double.TryParse(elementPrice, out result);
         }
         private void ShowElement(IGEWebElement elem){

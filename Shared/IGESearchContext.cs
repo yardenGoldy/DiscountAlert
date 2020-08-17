@@ -19,7 +19,6 @@ namespace DiscountAlert.Shared
         ReadOnlyCollection<IGEWebElement> FindElementsByTag(string tag);
         ReadOnlyCollection<IGEWebElement> FindElementsByText(string text);
         ReadOnlyCollection<IGEWebElement> FindElementsByContainsText(string containText);
-        ReadOnlyCollection<IGEWebElement> FindElementsByContainsTextIgnoreSpaces(string containText);
         bool IsElementExist(string tag, string attribute, string value);
         bool IsElementExist(string attribute, string value);
         bool IsElementExistByContainText(string containText);
