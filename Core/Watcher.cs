@@ -6,7 +6,6 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using DiscountAlert.Shared;
 using MoreLinq;
-using OpenQA.Selenium;
 using SixLabors.ImageSharp;
 
 namespace DiscountAlert.Core
@@ -34,29 +33,27 @@ namespace DiscountAlert.Core
 
         public List<WatcherWebDriver> Watch(string title, string url, string classNameOfResults){
             this._webDriver.Navigate(url);
-            return this.FindElementForWatch(classNameOfResults);
+            return this.ExtractDetailsFromElements(classNameOfResults);
         }
 
-        private List<WatcherWebDriver> FindElementForWatch(string classNameOfResults){
+        private List<WatcherWebDriver> ExtractDetailsFromElements(string classNameOfResults){
             List<WatcherWebDriver> watcherWebDrivers = new List<WatcherWebDriver>();
             Thread.Sleep(6000);
             
             var elementsToWatch = _webDriver.FindElementsByClassName(classNameOfResults);
             for(int i = 0; i < elementsToWatch.Count; i++){
                 var elem = elementsToWatch[i];
+                var price = ExtractPriceFromElement(elem);
                 watcherWebDrivers.Add(new WatcherWebDriver(){
-                    Price = FindPrice(elem),
+                    Price = price,
                     Snapshot = this._webDriver.TakeScreenShot(elem)
                 });
             }
 
-            watcherWebDrivers.OrderBy(x => x.Price);
-            watcherWebDrivers.Take(3);
             return watcherWebDrivers;
-
         }
 
-        private double FindPrice(IGEWebElement element){
+        private double ExtractPriceFromElement(IGEWebElement element){
             for(int i = 0; i < identifiers.Count; i++) {
                 string priceIdentify = identifiers[i];
                 var priceElementCandidates = element.FindElementsByContainsText(priceIdentify);
