@@ -3,6 +3,9 @@ using DiscountAlert.Shared;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using OpenQA.Selenium;
+using System.Runtime.CompilerServices;
+using System.Linq;
+
 namespace DiscountAlert.WebDriver
 {
     public abstract class GEElementFinder<T> : IGESearchContext
@@ -23,6 +26,16 @@ namespace DiscountAlert.WebDriver
         {
             var attributeValuePattern = $".//*[@{attribute}='{value}']";
             return FindElementByXPath(attributeValuePattern);
+        }
+
+         public string findUrls(){
+            List<string> elements = new List<string>();
+            var aElements = FindElementByTag("a", "href");
+            elements.AddRange(aElements.Select(x => x.GetAttribute("href")));
+            elements = elements.Where(url => url.Contains("http")).ToList();
+            var groupedElements = elements.GroupBy(x => x);
+            var orders = groupedElements.OrderBy(x => x.Count());
+            return orders.LastOrDefault().Key;
         }
 
         public IGEWebElement FindElement(string tag, string attribute, string value)
@@ -46,6 +59,12 @@ namespace DiscountAlert.WebDriver
         {
             var allTagElementPattern = $".//{tag}";
             return FindElementByXPath(allTagElementPattern);
+        }
+
+        public ReadOnlyCollection<IGEWebElement> FindElementByTag(string tag, string attribute)
+        {
+            var allTagElementPattern = $".//{tag}[@{attribute}]";
+            return FindElementsByXPath(allTagElementPattern);
         }
 
         public ReadOnlyCollection<IGEWebElement> FindChildElementsByTagName(string tag)
@@ -84,6 +103,9 @@ namespace DiscountAlert.WebDriver
         {
             return FindElements("class", className);
         }
+
+       
+
         public ReadOnlyCollection<IGEWebElement> FindElementsByTag(string tag)
         {
             var allTagElementPattern = $".//{tag}";

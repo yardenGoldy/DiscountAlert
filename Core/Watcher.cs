@@ -46,11 +46,20 @@ namespace DiscountAlert.Core
                 var price = ExtractPriceFromElement(elem);
                 watcherWebDrivers.Add(new WatcherWebDriver(){
                     Price = price,
-                    Snapshot = this._webDriver.TakeScreenShot(elem)
+                    Snapshot = this._webDriver.TakeScreenShot(elem),
+                    Id= this.GetIdFromElement(elem)
                 });
             }
 
             return watcherWebDrivers;
+        }
+
+        private string GetIdFromElement(IGEWebElement element){
+            var elementId = element.findUrls();
+            if(elementId != null){
+                return elementId;
+            }
+            throw new Exception("multiply ids");
         }
 
         private double ExtractPriceFromElement(IGEWebElement element){
