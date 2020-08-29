@@ -25,15 +25,41 @@ namespace DiscountAlert.Core
             "שקל",
             "שקלים",
         };
+        public Dictionary<string, string> DomainsPopUp { get; set; }
         //*[matches(text(),'(^|\W)match($|\W)','i')]
         private IGEWebDriver _webDriver;
         public Watcher(IGEWebDriver webDriver){
             _webDriver = webDriver;
+            InitDomainDictionary();
         }
 
         public List<WatcherWebDriver> Watch(string title, string url, string classNameOfResults){
             this._webDriver.Navigate(url);
+            ClosePopUpIfNecessary(url);
             return this.ExtractDetailsFromElements(classNameOfResults);
+        }
+
+        private void ClosePopUpIfNecessary(string url)
+        {
+            var domain = getDomainFromUrl(url);
+            if(DomainsPopUp.ContainsKey(domain)){
+                var selector = DomainsPopUp[domain];
+                var elements = this._webDriver.FindElementsByClassName(selector);
+                for(int i = 0; i < elements.Count; i++){
+                    var elem = elements[i];
+                    try{
+                        elem.Click();
+                    }
+                    catch(Exception){
+
+                    }
+                }
+            }
+        }
+
+        private string getDomainFromUrl(string url){
+            Uri uri = new Uri(url);
+            return uri.Host.Split(".")[1];
         }
 
         private List<WatcherWebDriver> ExtractDetailsFromElements(string classNameOfResults){
@@ -41,16 +67,32 @@ namespace DiscountAlert.Core
             Thread.Sleep(6000);
             
             var elementsToWatch = _webDriver.FindElementsByClassName(classNameOfResults);
-            for(int i = 0; i < elementsToWatch.Count; i++){
-                var elem = elementsToWatch[i];
+            int numberOfElements = elementsToWatch.Count();
+            if(numberOfElements == 0)
+                throw new Exception("cannot find any elemnet to watch for");
+
+            else if(numberOfElements == 1) {
+                var elem = elementsToWatch.First();
                 var price = ExtractPriceFromElement(elem);
                 watcherWebDrivers.Add(new WatcherWebDriver(){
                     Price = price,
                     Snapshot = this._webDriver.TakeScreenShot(elem),
-                    Id= this.GetIdFromElement(elem)
+                    Id= this._webDriver.State.Url
                 });
             }
-
+            else
+            {
+                for(int i = 0; i < elementsToWatch.Count; i++){
+                    var elem = elementsToWatch[i];
+                    var price = ExtractPriceFromElement(elem);
+                    watcherWebDrivers.Add(new WatcherWebDriver(){
+                        Price = price,
+                        Snapshot = this._webDriver.TakeScreenShot(elem),
+                        Id= this.GetIdFromElement(elem)
+                    });
+                }
+            }
+            
             return watcherWebDrivers;
         }
 
@@ -75,13 +117,17 @@ namespace DiscountAlert.Core
 
             throw new Exception("can not find any price");
         }
-
+        private bool IgnoreText(string text){
+            var result = Regex.IsMatch(text, "per|coupon", RegexOptions.IgnoreCase);
+            return result;
+        }
         private double? TryGetMinPriceOfAnElement(IList<IGEWebElement> elements, string priceIdentify)
         {
             double? resultPrice = null;
             List<double> prices = new List<double>();
             for(int j = 0; j < elements.Count; j++) {
                 string priceText = elements[j].Text;
+                if(IgnoreText(priceText)) continue;
                 priceText = this.getPriceFromText(priceText, priceIdentify);
                 double result;
                     
@@ -134,6 +180,12 @@ namespace DiscountAlert.Core
             }
         }
 
+        private void InitDomainDictionary(){
+            DomainsPopUp = new Dictionary<string, string>();
+            DomainsPopUp.Add("aliexpress", "next-dialog-close");
+            DomainsPopUp.Add("momondo", "Button-No-Standard-Style close darkIcon large ");
+        }
+        
         private double choosePrice(IList<double> prices){
             double median = this.getMedian(prices);
             prices = prices.Where(price => median * 0.2 < price).ToList();
