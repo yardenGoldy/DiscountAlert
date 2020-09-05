@@ -64,7 +64,7 @@ namespace DiscountAlert.Core
 
         private List<WatcherWebDriver> ExtractDetailsFromElements(string classNameOfResults){
             List<WatcherWebDriver> watcherWebDrivers = new List<WatcherWebDriver>();
-            Thread.Sleep(6000);
+            Thread.Sleep(10000);
             
             var elementsToWatch = _webDriver.FindElementsByClassName(classNameOfResults);
             int numberOfElements = elementsToWatch.Count();
@@ -118,7 +118,7 @@ namespace DiscountAlert.Core
             throw new Exception("can not find any price");
         }
         private bool IgnoreText(string text){
-            var result = Regex.IsMatch(text, "per|coupon", RegexOptions.IgnoreCase);
+            var result = Regex.IsMatch(text, "per|coupon|shipping|משלוח", RegexOptions.IgnoreCase);
             return result;
         }
         private double? TryGetMinPriceOfAnElement(IList<IGEWebElement> elements, string priceIdentify)

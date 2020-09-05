@@ -35,7 +35,7 @@ namespace DiscountAlert.WebDriver
             elements = elements.Where(url => url.Contains("http")).ToList();
             var groupedElements = elements.GroupBy(x => x);
             var orders = groupedElements.OrderBy(x => x.Count());
-            return orders.LastOrDefault().Key;
+            return orders.LastOrDefault()?.Key;
         }
 
         public IGEWebElement FindElement(string tag, string attribute, string value)
