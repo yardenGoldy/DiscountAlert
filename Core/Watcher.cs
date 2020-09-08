@@ -13,7 +13,6 @@ namespace DiscountAlert.Core
     {
         private IPriceFinder _priceFinder;
         public Dictionary<string, string> DomainsPopUp { get; set; }
-        //*[matches(text(),'(^|\W)match($|\W)','i')]
         private IGEWebDriver _webDriver;
         public Watcher(IGEWebDriver webDriver): this(webDriver, new PriceFinder()){
         }
